@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FrameForge Studio · Gemini Multitool</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#06070d;--line:rgba(230,191,110,.17);--line2:rgba(230,191,110,.34);--text:#edf1ff;--muted:#97a3c5;--muted2:#6e7895;--gold:#d9b46b;--gold2:#f0d79d;--violet:#8b68ff;--green:#6dd8a3;--shadow:0 26px 80px rgba(0,0,0,.45);--r-xl:28px}
+    *{box-sizing:border-box} html,body{margin:0;min-height:100%}
+    body{font-family:Inter,system-ui,sans-serif;color:var(--text);background:radial-gradient(circle at 0% 0%, rgba(139,104,255,.18), transparent 27%),radial-gradient(circle at 100% 0%, rgba(217,180,107,.13), transparent 25%),linear-gradient(180deg,#05070b 0%,#070b12 52%,#04060a 100%);overflow-x:hidden}
+    body::before{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);background-size:28px 28px;mask-image:radial-gradient(circle at center, black 55%, transparent 100%);opacity:.3}
+    .shell{width:min(1440px, calc(100% - 28px));margin:24px auto 40px;position:relative;z-index:1}
+    .hero,.card{border:1px solid var(--line);border-radius:32px;background:linear-gradient(180deg, rgba(15,20,35,.94), rgba(8,12,22,.97));box-shadow:var(--shadow);overflow:hidden;position:relative}.hero{padding:30px}.hero::after{content:"";position:absolute;right:-110px;bottom:-140px;width:340px;height:340px;background:radial-gradient(circle, rgba(139,104,255,.18), transparent 68%);filter:blur(12px)}
+    .eyebrow{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;border:1px solid var(--line2);background:rgba(217,180,107,.06);color:var(--gold2);font:700 11px/1 JetBrains Mono, monospace;letter-spacing:.14em;text-transform:uppercase}
+    .hero-top{display:flex;justify-content:space-between;gap:24px;align-items:flex-start;flex-wrap:wrap;position:relative;z-index:1} h1{margin:14px 0 12px;font-family:"Cormorant Garamond",serif;font-size:clamp(48px,8vw,82px);line-height:.92;letter-spacing:-.03em;font-weight:700}.hero p{max-width:860px;margin:0;color:var(--muted);font-size:15px;line-height:1.75}.hero-side{min-width:min(100%,420px);display:grid;gap:12px}.mini-card{border:1px solid var(--line);border-radius:18px;padding:16px;background:rgba(255,255,255,.02)} .mini-card .k{color:var(--gold2);font:700 11px/1 JetBrains Mono, monospace;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px} .mini-card .v{color:var(--muted);font-size:13px;line-height:1.6}
+    .layout{margin-top:20px;display:grid;grid-template-columns:1.08fr .92fr;gap:20px;align-items:start}.head{padding:22px 22px 0}.body{padding:22px}.title{font-size:15px;font-weight:800;letter-spacing:.02em}.sub{color:var(--muted);font-size:13px;line-height:1.55;margin-top:4px}
+    .api-row{display:grid;grid-template-columns:1fr 210px;gap:12px;margin-bottom:16px}.field,.select,textarea{width:100%;border-radius:16px;border:1px solid rgba(255,255,255,.08);background:rgba(4,6,10,.82);color:var(--text);outline:none;padding:14px 15px;font:14px/1.5 Inter,system-ui,sans-serif} textarea{min-height:132px;resize:vertical}
+    .section-label{color:var(--gold2);font:700 11px/1 JetBrains Mono, monospace;letter-spacing:.12em;text-transform:uppercase;margin:18px 0 10px}.tool-detail{border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.02);padding:16px;margin-bottom:14px}
+    .tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:16px}.tab{border:1px solid var(--line);border-radius:16px;padding:12px;background:rgba(255,255,255,.02);cursor:pointer;transition:.2s ease;min-height:88px;appearance:none;color:inherit;text-align:left}.tab.active{border-color:rgba(217,180,107,.42);background:rgba(217,180,107,.08);box-shadow:0 0 0 1px rgba(217,180,107,.1) inset}.tab .tt{color:var(--gold2);font:700 11px/1 JetBrains Mono, monospace;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}.tab .td{color:var(--muted);font-size:12px;line-height:1.45}
+    .upload-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.drop{position:relative;aspect-ratio:9/16;min-height:440px;border-radius:22px;border:1px dashed rgba(240,215,157,.28);background:linear-gradient(180deg, rgba(255,255,255,.015), rgba(255,255,255,.01)),radial-gradient(circle at top, rgba(139,104,255,.12), transparent 40%);overflow:hidden;display:flex;align-items:center;justify-content:center;text-align:center;padding:16px;transition:.2s ease;isolation:isolate}.drop.drag{border-color:var(--gold2);transform:translateY(-2px);box-shadow:0 18px 40px rgba(120,83,22,.2)} .drop.has .placeholder,.drop.has .drop-top,.drop.has .drop-foot{opacity:0;pointer-events:none}.drop-top{position:absolute;inset:12px 12px auto 12px;display:flex;justify-content:space-between;gap:8px;z-index:2}.chip{border:1px solid var(--line);background:rgba(8,11,19,.76);color:var(--gold2);border-radius:999px;padding:7px 10px;font:700 10px/1 JetBrains Mono, monospace;letter-spacing:.08em;text-transform:uppercase}.placeholder{width:88%;max-width:280px;position:relative;z-index:1}.icon{width:76px;height:76px;margin:0 auto 16px;border-radius:24px;border:1px solid var(--line);display:grid;place-items:center;background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));box-shadow:inset 0 0 30px rgba(139,104,255,.08);font-size:30px}.placeholder h3{margin:0 0 10px;font-size:20px}.placeholder p{margin:0;color:var(--muted);font-size:13px;line-height:1.6}.drop-foot{position:absolute;left:16px;right:16px;bottom:16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;z-index:1}.drop-foot small{color:var(--muted);font-size:12px}.hidden-input{position:absolute;inset:0;opacity:0;cursor:pointer}.preview{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}.drop.has .preview{display:block}.overlay{display:none;position:absolute;inset:auto 0 0 0;padding:16px;text-align:left;background:linear-gradient(180deg, transparent, rgba(4,7,12,.92));z-index:1}.drop.has .overlay{display:block}.overlay strong{display:block;font-size:14px;word-break:break-word}.overlay span{color:var(--muted);font-size:12px}.hide{display:none !important}
+    .options{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}.toggle{position:relative;border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.02);padding:14px;display:flex;gap:12px;align-items:flex-start;cursor:pointer;transition:.2s ease;user-select:none}.toggle.active{border-color:rgba(139,104,255,.42);background:rgba(139,104,255,.08)} .toggle input{position:absolute;opacity:0;pointer-events:none}.switch{width:42px;height:24px;border-radius:999px;border:1px solid var(--line);position:relative;background:rgba(255,255,255,.03);flex-shrink:0;margin-top:1px;transition:.2s ease}.switch::after{content:"";position:absolute;width:16px;height:16px;border-radius:50%;left:3px;top:3px;background:var(--muted2);transition:.2s ease}.toggle.active .switch{background:rgba(217,180,107,.12);border-color:rgba(217,180,107,.35)} .toggle.active .switch::after{left:21px;background:var(--gold2)} .toggle .tt{font:700 12px/1.35 JetBrains Mono, monospace;letter-spacing:.05em;text-transform:uppercase;color:var(--gold2);margin-bottom:6px}.toggle .td{color:var(--muted);font-size:13px;line-height:1.5}
+    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}.btn{border:none;border-radius:16px;cursor:pointer;padding:14px 18px;font-size:14px;font-weight:800;color:var(--text);transition:.2s ease}.btn:hover{transform:translateY(-1px)}.btn-main{background:linear-gradient(135deg,var(--gold),#b88634 52%,var(--violet) 130%);box-shadow:0 14px 28px rgba(114,82,27,.34)}.btn-ghost{background:rgba(255,255,255,.03);border:1px solid var(--line)}
+    .status{display:none;margin-top:18px;border:1px solid var(--line);border-radius:20px;padding:18px;background:rgba(255,255,255,.02)}.status.on{display:block}.steps{display:grid;gap:10px;margin-top:14px}.step{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:center;padding:12px;border-radius:16px;border:1px solid rgba(255,255,255,.05);background:rgba(255,255,255,.02)}.dot{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);color:var(--gold2);background:rgba(10,14,24,.85);font:700 13px/1 JetBrains Mono, monospace}.step.active{border-color:rgba(139,104,255,.4);background:rgba(139,104,255,.08)}.step.done{border-color:rgba(109,216,163,.24);background:rgba(109,216,163,.07)}.step.done .dot{border-color:rgba(109,216,163,.4);color:var(--green)}
+    .err{display:none;border-top:1px solid rgba(255,255,255,.04);background:linear-gradient(180deg, rgba(62,10,22,.72), rgba(38,7,15,.92));padding:18px}.err.on{display:block}.err .et{color:#ffc8d2;font-weight:800;margin-bottom:8px}.err .em{color:#ffdce3;white-space:pre-wrap;font-size:14px;line-height:1.6}
+    .right-stack{display:grid;gap:20px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.analysis{border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.02);padding:18px}.analysis h3{margin:0 0 14px;font-size:16px}.list{display:grid;gap:10px}.item{display:grid;grid-template-columns:minmax(124px,.88fr) 1.22fr;gap:10px;align-items:start;padding-bottom:10px;border-bottom:1px dashed rgba(255,255,255,.06)}.item:last-child{border-bottom:none;padding-bottom:0}.ik{color:var(--gold2);font:700 11px/1.4 JetBrains Mono, monospace;letter-spacing:.08em;text-transform:uppercase}.iv{color:var(--text);font-size:14px;line-height:1.55}.muted-empty{color:var(--muted);font-size:14px;line-height:1.6}.box{border:1px solid var(--line);border-radius:20px;background:rgba(255,255,255,.02);overflow:hidden}.box-head{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:16px 18px;border-bottom:1px solid rgba(255,255,255,.05);background:rgba(255,255,255,.015)}.bh{font:700 12px/1 JetBrains Mono, monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--gold2)}.copy{border:1px solid var(--line);background:rgba(255,255,255,.02);color:var(--text);border-radius:12px;padding:9px 12px;font:700 12px/1 Inter,system-ui,sans-serif;cursor:pointer}.copy.ok{border-color:rgba(109,216,163,.45);color:var(--green)}.out{padding:16px 18px;min-height:140px;white-space:pre-wrap;word-break:break-word;color:#dbe0ff;font:13px/1.75 "JetBrains Mono",monospace}.hint,.footer-note{color:var(--muted);font-size:13px;line-height:1.6}.hint{padding:0 18px 16px}.footer-note{margin-top:14px;color:var(--muted2);font-size:12px}
+    @media (max-width:1200px){.layout{grid-template-columns:1fr}} @media (max-width:820px){.api-row,.tabs,.upload-grid,.options,.grid2{grid-template-columns:1fr}.drop{min-height:380px}.hero,.body,.head{padding-left:18px;padding-right:18px}}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <section class="hero">
+      <div class="hero-top">
+        <div>
+          <div class="eyebrow">FrameForge Studio · Gemini API Multitool</div>
+          <h1>AI Photo Studio<br>10 araç, tek arayüz</h1>
+          <p>FrameClone, PoseClone, LightingClone, CameraMatch, LocationSwap, OutfitTransfer, SceneBuilder, Influencer Generator, Reference Mixer ve AI Photoshoot Simulator tek panelde birleşti. Gemini API ile görselleri ve yazılı brief'leri analiz eder, ardından DALL·E, Midjourney ve Flux için ayrı ayrı daha stabil prompt paketleri üretir.</p>
+        </div>
+        <div class="hero-side">
+          <div class="mini-card"><div class="k">Nasıl çalışır</div><div class="v">Gemini API key gir → modül seç → görsel/prompt yükle → Gemini structured JSON oluştursun → sana kullanıma hazır prompt seti dönsün.</div></div>
+          <div class="mini-card"><div class="k">Çıktılar</div><div class="v">Scene analysis, subject transfer rules, ana prompt, negative prompt, DALL·E / Midjourney / Flux varyantları ve üretim notları.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="layout">
+      <div class="card">
+        <div class="head"><div><div class="title">Gemini Studio Paneli</div><div class="sub">Ücretsiz Gemini Developer API ile çalışacak şekilde tasarlandı. API key'i tarayıcıda localStorage'a kaydedilir.</div></div></div>
+        <div class="body">
+          <div class="api-row">
+            <input id="apiKey" class="field" type="password" placeholder="Gemini API Key" autocomplete="off">
+            <select id="modelSelect" class="select">
+              <option value="gemini-2.5-flash-lite">gemini-2.5-flash-lite</option>
+              <option value="gemini-2.5-flash">gemini-2.5-flash</option>
+              <option value="gemini-2.5-pro">gemini-2.5-pro</option>
+            </select>
+          </div>
+
+          <div class="section-label">Araç Modülü</div>
+          <div class="tool-detail">
+            <div class="title" id="toolDetailTitle" style="margin-bottom:8px">Modül Açıklaması</div>
+            <div class="sub" id="toolDetailText">Seçilen modülün detaylı açıklaması burada görünecek.</div>
+          </div>
+          <div class="tabs" id="toolTabs"></div>
+
+          <div class="section-label">Girdiler</div>
+          <div class="upload-grid">
+            <div class="drop" id="inputABox">
+              <div class="drop-top"><span class="chip" id="inputAChip1">Input A</span><span class="chip" id="inputAChip2">Reference</span></div>
+              <img class="preview" id="inputAPreview" alt="Preview A">
+              <div class="placeholder"><div class="icon">🖼️</div><h3 id="inputATitle">Birinci Girdi</h3><p id="inputADesc">Seçili modüle göre referans görsel yükle.</p></div>
+              <div class="overlay"><strong id="inputAFileText">Dosya seçilmedi</strong><span id="inputAOverlaySub">Girdi hazır</span></div>
+              <div class="drop-foot"><small id="inputAFoot">Görsel tabanlı modüller için kullanılır</small><button type="button" class="btn btn-ghost" onclick="document.getElementById('inputAFile').click()">Dosya Seç</button></div>
+              <input class="hidden-input" id="inputAFile" type="file" accept="image/*">
+            </div>
+            <div class="drop" id="inputBBox">
+              <div class="drop-top"><span class="chip" id="inputBChip1">Input B</span><span class="chip" id="inputBChip2">Reference</span></div>
+              <img class="preview" id="inputBPreview" alt="Preview B">
+              <div class="placeholder"><div class="icon">🧑</div><h3 id="inputBTitle">İkinci Girdi</h3><p id="inputBDesc">Seçili modüle göre ikinci referans görsel yükle.</p></div>
+              <div class="overlay"><strong id="inputBFileText">Dosya seçilmedi</strong><span id="inputBOverlaySub">Girdi hazır</span></div>
+              <div class="drop-foot"><small id="inputBFoot">Karakter / stil / hedef görsel</small><button type="button" class="btn btn-ghost" onclick="document.getElementById('inputBFile').click()">Dosya Seç</button></div>
+              <input class="hidden-input" id="inputBFile" type="file" accept="image/*">
+            </div>
+          </div>
+
+          <div class="section-label">Yazılı Brief</div>
+          <textarea id="textBrief" placeholder="Ek hedefler, kıyafet notları, ortam tanımı, istemediğin şeyler, marka/estetik referansları veya hazır scene promptunu buraya yaz."></textarea>
+
+          <div class="options">
+            <label class="toggle active" id="toggleVertical"><input type="checkbox" id="vertical916" checked><div class="switch"></div><div><div class="tt">9:16 Vertical</div><div class="td">Promptta dikey portre formatını zorlar.</div></div></label>
+            <label class="toggle" id="togglePhone"><input type="checkbox" id="phoneFlash"><div class="switch"></div><div><div class="tt">iPhone + Flash</div><div class="td">Ek varyantta telefon sensörü ve direkt flaş hissi üretir.</div></div></label>
+            <label class="toggle active" id="toggleStrict"><input type="checkbox" id="strictLock" checked><div class="switch"></div><div><div class="tt">Strict Scene Lock</div><div class="td">Sahne ve kompozisyon kilidini daha sert uygular.</div></div></label>
+            <label class="toggle" id="toggleWorkflow"><input type="checkbox" id="includeWorkflow"><div class="switch"></div><div><div class="tt">Workflow Notes</div><div class="td">Ek üretim notları ve kullanım tavsiyeleri döndürür.</div></div></label>
+          </div>
+
+          <div class="actions"><button class="btn btn-main" id="generateBtn">Gemini ile Üret</button><button class="btn btn-ghost" id="resetBtn">Sıfırla</button></div>
+          <div class="status" id="statusBox"><div class="title">İşleniyor</div><div class="sub">Girdiler hazırlanıyor, Gemini’ye inline image + text gönderiliyor, structured JSON bekleniyor.</div><div class="steps"><div class="step" data-step="1"><div class="dot">1</div><div><strong>Girdiler doğrulanıyor</strong><div class="sub">Seçili modül için gerekli dosya ve metin alanları kontrol ediliyor.</div></div></div><div class="step" data-step="2"><div class="dot">2</div><div><strong>Görseller sıkıştırılıyor</strong><div class="sub">Her görsel maksimum 1024px'e küçültülüyor.</div></div></div><div class="step" data-step="3"><div class="dot">3</div><div><strong>Gemini isteği hazırlanıyor</strong><div class="sub">Modüle göre sistem promptu ve JSON schema oluşturuluyor.</div></div></div><div class="step" data-step="4"><div class="dot">4</div><div><strong>Structured sonuç parse ediliyor</strong><div class="sub">JSON cevap ayrıştırılıp ekrana yerleştiriliyor.</div></div></div></div></div>
+          <div class="footer-note">İpucu: görsel gerektirmeyen modüllerde sadece text brief ile de çalışabilirsin.</div>
+        </div>
+        <div class="err" id="errorBox"><div class="et">Hata</div><div class="em" id="errorText"></div></div>
+      </div>
+
+      <div class="right-stack">
+        <div class="card"><div class="body"><div class="grid2"><div class="analysis"><h3>Yapısal Analiz</h3><div class="list" id="analysisList"><div class="muted-empty">Henüz sonuç yok.</div></div></div><div class="analysis"><h3>Üretim Stratejisi</h3><div class="list" id="strategyList"><div class="muted-empty">Henüz sonuç yok.</div></div></div></div></div></div>
+        <div class="box"><div class="box-head"><div class="bh">Ana Prompt</div><button class="copy" data-copy="mainPromptOut">Kopyala</button></div><div class="out" id="mainPromptOut">Henüz oluşturulmadı.</div></div>
+        <div class="box"><div class="box-head"><div class="bh">Negative Prompt</div><button class="copy" data-copy="negativePromptOut">Kopyala</button></div><div class="out" id="negativePromptOut">Henüz oluşturulmadı.</div></div>
+        <div class="box"><div class="box-head"><div class="bh">DALL·E / Midjourney / Flux Varyantları</div><button class="copy" data-copy="variantsOut">Kopyala</button></div><div class="out" id="variantsOut">Henüz oluşturulmadı.</div><div class="hint">Tek araçtan üç farklı model diline uyarlanmış promptlar döner.</div></div>
+        <div class="box"><div class="box-head"><div class="bh">Workflow Notes</div><button class="copy" data-copy="workflowOut">Kopyala</button></div><div class="out" id="workflowOut">Henüz oluşturulmadı.</div></div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'frameforge_gemini_api_key';
+    const REQUIRED_NEGATIVE = ['horizontal','landscape','16:9','cartoon','CGI','illustration','bad anatomy','watermark'];
+    const TOOL_DEFS = {
+      frameclone:{label:'FrameClone',desc:'Sahne + karakter birleştirme',longDesc:'Bir sahne referansının kamera açısını, kadraj mantığını, ışık yönünü, arka plan yapısını ve renk tonunu koruyup ikinci görseldeki karakteri o sahnenin içine yerleştirmek için kullanılır. Amaç yalnızca kişiyi değiştirmek; sahneyi yeniden icat etmek değildir.',inputA:{title:'Sahne Görseli',desc:'Kamera, ışık, kompozisyon ve background referansı.',chip1:'Input A',chip2:'Scene',foot:'Scene reference yükle',overlay:'Scene reference hazır',required:true},inputB:{title:'Karakter Görseli',desc:'Yüz, saç, ten, göz ve kimlik referansı.',chip1:'Input B',chip2:'Character',foot:'Character reference yükle',overlay:'Character reference hazır',required:true},briefPlaceholder:'Ek kurallar: pozu koru, kıyafeti koru, ortamı bozma, daha editorial yap, vs.'},
+      poseclone:{label:'PoseClone Engine',desc:'Poz aktarımı',longDesc:'Birinci görseldeki beden yerleşimini, omuz açısını, baş eğimini, el pozisyonlarını ve genel duruş akışını ikinci görseldeki karaktere taşır. Özellikle moda, fitness, editorial ve sosyal medya görselleri için güçlüdür.',inputA:{title:'Poz Referansı',desc:'Body angle, hand placement, head tilt ve duruş referansı.',chip1:'Input A',chip2:'Pose',foot:'Pose reference yükle',overlay:'Pose reference hazır',required:true},inputB:{title:'Karakter Görseli',desc:'Pozu uygulanacak karakter.',chip1:'Input B',chip2:'Character',foot:'Character reference yükle',overlay:'Character reference hazır',required:true},briefPlaceholder:'Örn: Tam boy olsun, sağ el cebe girsin, fashion editorial hissi.'},
+      lightingclone:{label:'LightingClone',desc:'Işık setup aktarımı',longDesc:'Ana ışığın yönü, gölge sertliği, rim light, contrast seviyesi ve genel aydınlatma karakterini koruyup diğer hedefe taşır.',inputA:{title:'Işık Referansı',desc:'Key light, fill, rim, shadow pattern referansı.',chip1:'Input A',chip2:'Lighting',foot:'Lighting reference yükle',overlay:'Lighting reference hazır',required:true},inputB:{title:'Karakter / Hedef',desc:'Işığın uygulanacağı hedef karakter ya da sahne.',chip1:'Input B',chip2:'Target',foot:'Hedef görsel yükle',overlay:'Hedef görsel hazır',required:true},briefPlaceholder:'Örn: Daha soft skin rendering ama aynı shadow character.'},
+      cameramatch:{label:'CameraMatch',desc:'Lens ve kamera karakteri eşleme',longDesc:'Bir fotoğrafın lens hissini, arka plan sıkışmasını, alan derinliğini, bokeh yapısını ve genel kamera estetiğini okuyup başka hedefe uygular. Sahneden ziyade çekim karakterini taşır.',inputA:{title:'Kamera Referansı',desc:'Lens hissi, compression, DOF, bokeh referansı.',chip1:'Input A',chip2:'Camera',foot:'Camera reference yükle',overlay:'Camera reference hazır',required:true},inputB:{title:'Hedef Görsel',desc:'Kamera karakteri uygulanacak hedef.',chip1:'Input B',chip2:'Target',foot:'Hedef görsel yükle',overlay:'Hedef görsel hazır',required:true},briefPlaceholder:'Örn: 85mm portrait compression, creamy bokeh, editorial beauty shot.'},
+      locationswap:{label:'LocationSwap',desc:'Karakteri yeni mekana taşı',longDesc:'Bir karakteri başka bir lokasyona doğal şekilde entegre eder. Ölçek, perspektif, yerleşim ve ışık entegrasyonu doğru kalmalıdır.',inputA:{title:'Karakter Görseli',desc:'Taşınacak kişi / subject.',chip1:'Input A',chip2:'Character',foot:'Karakter görseli yükle',overlay:'Karakter hazır',required:true},inputB:{title:'Mekan Referansı',desc:'Yeni ortam, lokasyon, background referansı.',chip1:'Input B',chip2:'Location',foot:'Location reference yükle',overlay:'Location reference hazır',required:true},briefPlaceholder:'Örn: Ölçek, perspektif ve light integration çok doğal olsun.'},
+      outfittransfer:{label:'OutfitTransfer',desc:'Styling / kıyafet aktarımı',longDesc:'Bir görseldeki kıyafet düzenini, kumaş karakterini, silüeti, layering yapısını ve aksesuar ilişkisini okuyup başka karaktere taşır. Amaç yüzü değil stili taşımaktır.',inputA:{title:'Outfit Referansı',desc:'Kıyafet, kumaş, layering, aksesuar referansı.',chip1:'Input A',chip2:'Outfit',foot:'Outfit reference yükle',overlay:'Outfit reference hazır',required:true},inputB:{title:'Karakter Görseli',desc:'Stilin uygulanacağı subject.',chip1:'Input B',chip2:'Character',foot:'Character reference yükle',overlay:'Karakter hazır',required:true},briefPlaceholder:'Örn: Kumaş dokusu gerçekçi kalsın, silüet biraz daha luxury olsun.'},
+      scenebuilder:{label:'SceneBuilder',desc:'Sıfırdan sahne blueprint üret',longDesc:'Hiç referans görsel olmadan ya da az referansla sıfırdan bir sahne altyapısı kurar. Kamera, mekan, ışık, mood ve renk tonunu yazılı brief üzerinden kurgular.',inputA:{title:'Mood / Inspiration',desc:'İsteğe bağlı referans görsel.',chip1:'Input A',chip2:'Mood',foot:'İsteğe bağlı referans yükle',overlay:'Mood reference hazır',required:false},inputB:{title:'Ek Referans',desc:'İsteğe bağlı ikinci referans.',chip1:'Input B',chip2:'Extra',foot:'İsteğe bağlı görsel yükle',overlay:'Ek referans hazır',required:false},briefPlaceholder:'Buraya sahneyi yaz: kamera açısı, lokasyon, ışık, mood, styling, lens hissi, renk tonu.'},
+      influencer:{label:'Influencer Generator',desc:'Preset influencer / social image üretimi',longDesc:'Karakter görselinden sosyal medya estetiğine uygun fotoğraf fikirleri ve promptları üretir. Mirror selfie, cafe aesthetic, luxury hotel, gym, flash night out gibi stillerde güçlüdür.',inputA:{title:'Karakter Görseli',desc:'Influencer görseline dönüştürülecek kişi.',chip1:'Input A',chip2:'Character',foot:'Karakter yükle',overlay:'Karakter hazır',required:true},inputB:{title:'İlham Görseli',desc:'İsteğe bağlı stil / lokasyon / selfie referansı.',chip1:'Input B',chip2:'Style',foot:'İsteğe bağlı referans yükle',overlay:'Style reference hazır',required:false},briefPlaceholder:'Örn: mirror selfie, rooftop cafe, luxury hotel, gym, night flash, old money, clean girl aesthetic.'},
+      referencemixer:{label:'Reference Mixer',desc:'Birden fazla referansı tek promptta topla',longDesc:'Farklı referans türlerini çakıştırmadan birleştirir. Bir görselden sahne, diğerinden renk tonu, brief’ten styling ve ayrı bir nottan mood alınabilir.',inputA:{title:'Birinci Referans',desc:'Scene / lighting / camera gibi ana referans.',chip1:'Input A',chip2:'Primary',foot:'Birinci referansı yükle',overlay:'Primary reference hazır',required:true},inputB:{title:'İkinci Referans',desc:'Color grade / subject / style gibi ek referans.',chip1:'Input B',chip2:'Secondary',foot:'İkinci referansı yükle',overlay:'Secondary reference hazır',required:true},briefPlaceholder:'Üçüncü / dördüncü referansı yazıyla anlat: color palette, fashion, atmosphere, texture, etc.'},
+      photoshoot:{label:'AI Photoshoot Simulator',desc:'Tam çekim planı ve prompt üretimi',longDesc:'Bir fotoğraf çekimi direktörü gibi çalışır. Kamera seçimi, lens hissi, ışık planı, lokasyon, styling, poz önerileri ve estetik yönlendirmeleri tek sistemde toplar.',inputA:{title:'Karakter Görseli',desc:'Çekim planının subject’i.',chip1:'Input A',chip2:'Subject',foot:'Subject yükle',overlay:'Subject hazır',required:true},inputB:{title:'Mood Board',desc:'İsteğe bağlı mood board / aesthetic referansı.',chip1:'Input B',chip2:'Moodboard',foot:'İsteğe bağlı moodboard yükle',overlay:'Moodboard hazır',required:false},briefPlaceholder:'Çekim planını yaz: location, camera, lens, pose ideas, styling, light, time of day, editorial direction.'}
+    };
+
+    const state = { tool:'frameclone', inputAFile:null, inputBFile:null, inputAUrl:null, inputBUrl:null };
+    const els = {
+      apiKey:document.getElementById('apiKey'), modelSelect:document.getElementById('modelSelect'), toolTabs:document.getElementById('toolTabs'), toolDetailTitle:document.getElementById('toolDetailTitle'), toolDetailText:document.getElementById('toolDetailText'), inputABox:document.getElementById('inputABox'), inputBBox:document.getElementById('inputBBox'), inputAFile:document.getElementById('inputAFile'), inputBFile:document.getElementById('inputBFile'), inputAPreview:document.getElementById('inputAPreview'), inputBPreview:document.getElementById('inputBPreview'), inputAChip1:document.getElementById('inputAChip1'), inputAChip2:document.getElementById('inputAChip2'), inputBChip1:document.getElementById('inputBChip1'), inputBChip2:document.getElementById('inputBChip2'), inputATitle:document.getElementById('inputATitle'), inputBTitle:document.getElementById('inputBTitle'), inputADesc:document.getElementById('inputADesc'), inputBDesc:document.getElementById('inputBDesc'), inputAFoot:document.getElementById('inputAFoot'), inputBFoot:document.getElementById('inputBFoot'), inputAOverlaySub:document.getElementById('inputAOverlaySub'), inputBOverlaySub:document.getElementById('inputBOverlaySub'), inputAFileText:document.getElementById('inputAFileText'), inputBFileText:document.getElementById('inputBFileText'), textBrief:document.getElementById('textBrief'), vertical916:document.getElementById('vertical916'), phoneFlash:document.getElementById('phoneFlash'), strictLock:document.getElementById('strictLock'), includeWorkflow:document.getElementById('includeWorkflow'), toggleVertical:document.getElementById('toggleVertical'), togglePhone:document.getElementById('togglePhone'), toggleStrict:document.getElementById('toggleStrict'), toggleWorkflow:document.getElementById('toggleWorkflow'), generateBtn:document.getElementById('generateBtn'), resetBtn:document.getElementById('resetBtn'), statusBox:document.getElementById('statusBox'), errorBox:document.getElementById('errorBox'), errorText:document.getElementById('errorText'), steps:[...document.querySelectorAll('.step')], analysisList:document.getElementById('analysisList'), strategyList:document.getElementById('strategyList'), mainPromptOut:document.getElementById('mainPromptOut'), negativePromptOut:document.getElementById('negativePromptOut'), variantsOut:document.getElementById('variantsOut'), workflowOut:document.getElementById('workflowOut')
+    };
+
+    init();
+    function init(){
+      const saved = localStorage.getItem(STORAGE_KEY); if(saved) els.apiKey.value = saved;
+      renderToolTabs();
+      setupDrop(els.inputABox, els.inputAFile, 'A'); setupDrop(els.inputBBox, els.inputBFile, 'B');
+      bindToggleCard(els.toggleVertical, els.vertical916); bindToggleCard(els.togglePhone, els.phoneFlash); bindToggleCard(els.toggleStrict, els.strictLock); bindToggleCard(els.toggleWorkflow, els.includeWorkflow);
+      els.apiKey.addEventListener('input', () => localStorage.setItem(STORAGE_KEY, els.apiKey.value.trim()));
+      els.generateBtn.addEventListener('click', runGemini); els.resetBtn.addEventListener('click', resetApp);
+      document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', () => copyFromTarget(btn)));
+      setTool('frameclone');
+    }
+
+    function renderToolTabs(){
+      els.toolTabs.innerHTML = '';
+      Object.entries(TOOL_DEFS).forEach(([key, def]) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'tab' + (key === state.tool ? ' active' : '');
+        btn.innerHTML = `<div class="tt">${escapeHtml(def.label)}</div><div class="td">${escapeHtml(def.desc)}</div>`;
+        btn.addEventListener('click', () => setTool(key));
+        els.toolTabs.appendChild(btn);
+      });
+    }
+
+    function setTool(key){
+      state.tool = key;
+      const def = TOOL_DEFS[key];
+      renderToolTabs();
+      applyInputMeta(def.inputA, 'A'); applyInputMeta(def.inputB, 'B');
+      els.toolDetailTitle.textContent = `${def.label} · Detaylı Açıklama`;
+      els.toolDetailText.textContent = def.longDesc;
+      els.textBrief.placeholder = def.briefPlaceholder;
+      els.inputABox.classList.remove('hide'); els.inputBBox.classList.remove('hide');
+      if(key === 'scenebuilder') els.inputBBox.classList.add('hide');
+    }
+
+    function applyInputMeta(meta, which){
+      document.getElementById(`input${which}Chip1`).textContent = meta.chip1;
+      document.getElementById(`input${which}Chip2`).textContent = meta.chip2;
+      document.getElementById(`input${which}Title`).textContent = meta.title;
+      document.getElementById(`input${which}Desc`).textContent = meta.desc;
+      document.getElementById(`input${which}Foot`).textContent = meta.foot;
+      document.getElementById(`input${which}OverlaySub`).textContent = meta.overlay;
+    }
+
+    function bindToggleCard(card, input){
+      const sync = () => card.classList.toggle('active', !!input.checked);
+      card.onclick = (e) => {
+        e.preventDefault();
+        input.checked = !input.checked;
+        sync();
+      };
+      sync();
+    }
+
+    function setupDrop(drop, input, which){
+      ['dragenter','dragover'].forEach(name => drop.addEventListener(name, e => { e.preventDefault(); drop.classList.add('drag'); }));
+      ['dragleave','drop'].forEach(name => drop.addEventListener(name, e => { e.preventDefault(); drop.classList.remove('drag'); }));
+      drop.addEventListener('drop', e => { const f = e.dataTransfer.files?.[0]; if(f) setFile(f, which); });
+      input.addEventListener('change', e => { const f = e.target.files?.[0]; if(f) setFile(f, which); });
+    }
+
+    function setFile(file, which){
+      if(!file.type.startsWith('image/')) return showError('Lütfen geçerli bir görsel dosyası yükleyin.');
+      const keyFile = which === 'A' ? 'inputAFile' : 'inputBFile';
+      const keyUrl = which === 'A' ? 'inputAUrl' : 'inputBUrl';
+      revokeUrl(state[keyUrl]);
+      state[keyFile] = file; state[keyUrl] = URL.createObjectURL(file);
+      document.getElementById(`input${which}Preview`).src = state[keyUrl];
+      document.getElementById(`input${which}Box`).classList.add('has');
+      document.getElementById(`input${which}FileText`).textContent = `${file.name} · ${(file.size / 1024 / 1024).toFixed(2)} MB`;
+    }
+
+    async function runGemini(){
+      try{
+        clearError(); resetSteps(); els.statusBox.classList.add('on');
+        validate(); setStep(1,'done'); setStep(2,'active');
+        const [aImg,bImg] = await Promise.all([state.inputAFile ? compressImage(state.inputAFile) : Promise.resolve(null), state.inputBFile ? compressImage(state.inputBFile) : Promise.resolve(null)]);
+        setStep(2,'done'); setStep(3,'active');
+        const payload = buildGeminiPayload(aImg,bImg);
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(els.modelSelect.value)}:generateContent?key=${encodeURIComponent(els.apiKey.value.trim())}`;
+        const res = await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+        const json = await res.json().catch(() => ({}));
+        if(!res.ok) throw new Error(json?.error?.message || `HTTP ${res.status}`);
+        const parsed = extractGeminiJson(json); const normalized = normalizeResult(parsed);
+        setStep(3,'done'); setStep(4,'done'); renderAnalysis(normalized.analysis, els.analysisList); renderAnalysis(normalized.strategy, els.strategyList);
+        els.mainPromptOut.textContent = normalized.main_prompt; els.negativePromptOut.textContent = normalized.negative_prompt; els.variantsOut.textContent = buildVariantText(normalized.variants); els.workflowOut.textContent = normalized.workflow_notes || 'Not provided';
+      }catch(err){ showError(err.message || String(err)); }
+    }
+
+    function validate(){
+      if(!els.apiKey.value.trim()) throw new Error('Gemini API key gerekli.');
+      const def = TOOL_DEFS[state.tool];
+      if(def.inputA.required && !state.inputAFile && state.tool !== 'scenebuilder') throw new Error(`${def.inputA.title} gerekli.`);
+      if(state.tool !== 'scenebuilder' && def.inputB.required && !state.inputBFile) throw new Error(`${def.inputB.title} gerekli.`);
+      if(state.tool === 'scenebuilder' && !els.textBrief.value.trim() && !state.inputAFile) throw new Error('SceneBuilder için en azından text brief ya da referans görsel vermelisin.');
+    }
+
+    function buildGeminiPayload(aImg,bImg){
+      const def = TOOL_DEFS[state.tool];
+      const schema = {type:'OBJECT',properties:{analysis:{type:'OBJECT',properties:{primary_read:{type:'STRING'},secondary_read:{type:'STRING'},composition:{type:'STRING'},lighting:{type:'STRING'},styling:{type:'STRING'},camera:{type:'STRING'},environment:{type:'STRING'}},required:['primary_read','composition','lighting']},strategy:{type:'OBJECT',properties:{transfer_goal:{type:'STRING'},locked_elements:{type:'STRING'},flexible_elements:{type:'STRING'},realism_notes:{type:'STRING'},risk_notes:{type:'STRING'}},required:['transfer_goal','locked_elements','flexible_elements']},main_prompt:{type:'STRING'},negative_prompt:{type:'STRING'},variants:{type:'OBJECT',properties:{dalle:{type:'STRING'},midjourney:{type:'STRING'},flux:{type:'STRING'},iphone_flash:{type:'STRING'}},required:['dalle','midjourney','flux']},workflow_notes:{type:'STRING'}},required:['analysis','strategy','main_prompt','negative_prompt','variants']};
+      const text = [`You are an elite multimodal creative director and prompt engineer.`,`Selected tool: ${def.label}. Goal: ${def.desc}.`,buildToolInstructionBlock(state.tool),`User brief: ${els.textBrief.value.trim() || 'No extra brief provided.'}`,`Toggles: vertical_9_16=${els.vertical916.checked}, iphone_flash=${els.phoneFlash.checked}, strict_scene_lock=${els.strictLock.checked}, include_workflow_notes=${els.includeWorkflow.checked}`,`Return only JSON matching the schema.`].join('\n\n');
+      const parts = [{text}]; if(aImg) parts.push({inline_data:{mime_type:aImg.mime,data:aImg.base64}}); if(bImg) parts.push({inline_data:{mime_type:bImg.mime,data:bImg.base64}});
+      return {contents:[{role:'user',parts}],generationConfig:{temperature:0.35,responseMimeType:'application/json',responseSchema:schema}};
+    }
+
+    function buildToolInstructionBlock(tool){
+      switch(tool){
+        case 'frameclone': return 'FRAMECLONE RULES: Input A defines the scene. Input B defines the character. Preserve scene composition, camera, lighting, background, framing, and replace only the person.';
+        case 'poseclone': return 'POSECLONE RULES: Input A defines pose only. Input B defines character. Preserve body angle, shoulder rotation, hand placement, head tilt, and do not copy Input A background, clothes, or identity.';
+        case 'lightingclone': return 'LIGHTINGCLONE RULES: Input A defines lighting only. Input B defines the target subject/scene. Preserve key light direction, shadow behavior, rim light, contrast, and do not clone the full scene.';
+        case 'cameramatch': return 'CAMERAMATCH RULES: Input A defines camera/lens behavior only: focal length feel, depth of field, compression, distortion, bokeh, framing logic. Input B remains itself. Do not transplant Input A location, person, or styling.';
+        case 'locationswap': return 'LOCATIONSWAP RULES: Input A is the subject. Input B is the destination location. Preserve subject identity, preserve environment, and focus on natural placement, scale, perspective, and believable light integration.';
+        case 'outfittransfer': return 'OUTFITTRANSFER RULES: Input A defines clothing and styling only. Input B defines the target character. Preserve style logic, not person identity.';
+        case 'scenebuilder': return 'SCENEBUILDER RULES: Build a fresh scene blueprint from written brief and optional reference. No forced subject swap unless user requests it.';
+        case 'influencer': return 'INFLUENCER RULES: Input A defines character identity. Input B, if present, defines inspiration only. Prioritize social-native realism and influencer-friendly aesthetics.';
+        case 'referencemixer': return 'REFERENCE MIXER RULES: Decide what each reference is best used for, then merge without contradiction.';
+        case 'photoshoot': return 'AI PHOTOSHOOT SIMULATOR RULES: Build a full creative direction package: concept, scene, camera, lighting, styling, pose logic, and output prompt.';
+        default: return 'Use the selected inputs according to the chosen module.';
+      }
+    }
+
+    function extractGeminiJson(json){ const text = json?.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('') || ''; if(!text.trim()) throw new Error('Gemini yanıtı boş geldi.'); try{return JSON.parse(text);}catch{const m=text.match(/\{[\s\S]*\}/); if(!m) throw new Error('Gemini JSON parse edilemedi.'); return JSON.parse(m[0]);}}
+    function normalizeResult(data){ const out={analysis:ensureObject(data.analysis),strategy:ensureObject(data.strategy),main_prompt:normalizeText(data.main_prompt),negative_prompt:normalizeText(data.negative_prompt),variants:ensureObject(data.variants),workflow_notes:normalizeText(data.workflow_notes||'')}; if(els.vertical916.checked && !/9\s*:\s*16|9x16/i.test(out.main_prompt)) out.main_prompt=`9:16 vertical portrait, ${out.main_prompt}`; let neg=out.negative_prompt.toLowerCase(); REQUIRED_NEGATIVE.forEach(t=>{if(!neg.includes(t.toLowerCase())){out.negative_prompt += `${out.negative_prompt ? ', ' : ''}${t}`; neg=out.negative_prompt.toLowerCase();}}); if(els.phoneFlash.checked && !out.variants.iphone_flash) out.variants.iphone_flash=`${out.main_prompt}, shot on iPhone camera, direct smartphone flash, harder flash shadows, slight highlight clipping, candid night snapshot realism`; return out; }
+    function buildVariantText(v){ const parts=[]; if(v.dalle) parts.push(`DALL·E\n${v.dalle}`); if(v.midjourney) parts.push(`Midjourney\n${v.midjourney}`); if(v.flux) parts.push(`Flux\n${v.flux}`); if(v.iphone_flash) parts.push(`iPhone Flash Variant\n${v.iphone_flash}`); return parts.length ? parts.join('\n\n') : 'Henüz oluşturulmadı.'; }
+    function renderAnalysis(obj,container){ container.innerHTML=''; const entries=Object.entries(obj||{}); if(!entries.length){container.innerHTML='<div class="muted-empty">Henüz sonuç yok.</div>'; return;} entries.forEach(([k,v])=>{const row=document.createElement('div'); row.className='item'; row.innerHTML=`<div class="ik">${escapeHtml(k.replace(/_/g,' '))}</div><div class="iv">${escapeHtml(normalizeText(v))}</div>`; container.appendChild(row);}); }
+    async function compressImage(file,maxDim=1024){const data=await readFileAsDataURL(file); const img=await loadImage(data); const s=scaleToFit(img.width,img.height,maxDim); const c=document.createElement('canvas'); c.width=s.width; c.height=s.height; c.getContext('2d').drawImage(img,0,0,s.width,s.height); const mime=file.type==='image/png'?'image/png':'image/jpeg'; const out=c.toDataURL(mime,mime==='image/jpeg'?0.88:undefined); const m=out.match(/^data:(.*?);base64,(.*)$/); if(!m) throw new Error('Görsel base64 formatına çevrilemedi.'); return {mime:m[1],base64:m[2]}; }
+    function readFileAsDataURL(file){return new Promise((res,rej)=>{const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=()=>rej(new Error('Dosya okunamadı.')); r.readAsDataURL(file);});}
+    function loadImage(src){return new Promise((res,rej)=>{const i=new Image(); i.onload=()=>res(i); i.onerror=()=>rej(new Error('Görsel açılamadı.')); i.src=src;});}
+    function scaleToFit(w,h,maxDim){const l=Math.max(w,h); if(l<=maxDim) return {width:w,height:h}; const s=maxDim/l; return {width:Math.round(w*s),height:Math.round(h*s)};}
+    function setStep(n,stateName){const el=els.steps.find(x=>Number(x.dataset.step)===n); if(!el) return; el.classList.remove('active','done'); if(stateName) el.classList.add(stateName);} function resetSteps(){els.steps.forEach(el=>el.classList.remove('active','done'));}
+    function ensureObject(v){return v&&typeof v==='object'&&!Array.isArray(v)?v:{}} function normalizeText(v){if(v===null||v===undefined||v==='') return 'Not provided'; if(typeof v==='string') return v; if(typeof v==='number'||typeof v==='boolean') return String(v); return JSON.stringify(v);} function copyFromTarget(btn){const text=document.getElementById(btn.dataset.copy).textContent; copyText(text).then(ok=>{btn.textContent=ok?'Kopyalandı':'Kopyalanamadı'; btn.classList.toggle('ok',ok); setTimeout(()=>{btn.textContent='Kopyala'; btn.classList.remove('ok');},1400);});}
+    async function copyText(text){if(!text||text==='Henüz oluşturulmadı.') return false; try{if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(text); return true;}}catch{} try{const ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.focus(); ta.select(); const ok=document.execCommand('copy'); document.body.removeChild(ta); return ok;}catch{return false;}}
+    function resetOutputs(){els.analysisList.innerHTML='<div class="muted-empty">Henüz sonuç yok.</div>'; els.strategyList.innerHTML='<div class="muted-empty">Henüz sonuç yok.</div>'; els.mainPromptOut.textContent='Henüz oluşturulmadı.'; els.negativePromptOut.textContent='Henüz oluşturulmadı.'; els.variantsOut.textContent='Henüz oluşturulmadı.'; els.workflowOut.textContent='Henüz oluşturulmadı.';}
+    function resetApp(){revokeUrl(state.inputAUrl); revokeUrl(state.inputBUrl); state.inputAFile=null; state.inputBFile=null; state.inputAUrl=null; state.inputBUrl=null; els.inputAFile.value=''; els.inputBFile.value=''; els.inputAPreview.src=''; els.inputBPreview.src=''; els.inputABox.classList.remove('has','drag'); els.inputBBox.classList.remove('has','drag'); els.inputAFileText.textContent='Dosya seçilmedi'; els.inputBFileText.textContent='Dosya seçilmedi'; els.textBrief.value=''; els.phoneFlash.checked=false; els.includeWorkflow.checked=false; els.vertical916.checked=true; els.strictLock.checked=true; bindToggleCard(els.toggleVertical, els.vertical916); bindToggleCard(els.togglePhone, els.phoneFlash); bindToggleCard(els.toggleStrict, els.strictLock); bindToggleCard(els.toggleWorkflow, els.includeWorkflow); els.statusBox.classList.remove('on'); clearError(); resetSteps(); resetOutputs(); setTool(state.tool);}
+    function showError(msg){els.errorBox.classList.add('on'); els.errorText.textContent=msg;} function clearError(){els.errorBox.classList.remove('on'); els.errorText.textContent='';} function revokeUrl(url){if(!url) return; try{URL.revokeObjectURL(url);}catch{}} function escapeHtml(v){return String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');}
+  </script>
+</body>
+</html>
