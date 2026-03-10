@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>FrameClone Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0a;
+  --s1: #111111;
+  --s2: #161616;
+  --s3: #1c1c1c;
+  --border: rgba(255,255,255,0.06);
+  --border2: rgba(255,255,255,0.12);
+  --text: #f4f4f4;
+  --muted: #555;
+  --muted2: #888;
+  --accent: #e8ff47;
+  --accent-dim: rgba(232,255,71,0.07);
+  --accent-glow: rgba(232,255,71,0.18);
+  --red: #ff4d4d;
+  --green: #47ffb2;
+  --blue: #47b4ff;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.12) 2px,rgba(0,0,0,0.12) 4px);pointer-events:none;z-index:999;opacity:0.25}
+body::after{content:'';position:fixed;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);z-index:1000}
+
+/* HEADER */
+.header{display:flex;align-items:center;justify-content:space-between;padding:18px 32px;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(10,10,10,0.96);backdrop-filter:blur(20px);z-index:100}
+.logo{display:flex;align-items:center;gap:12px}
+.logo-box{width:30px;height:30px;border:1.5px solid var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:13px;color:var(--accent);letter-spacing:1px}
+.logo-name{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:4px}
+.logo-ver{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--accent);background:var(--accent-dim);border:1px solid rgba(232,255,71,0.18);padding:2px 8px;border-radius:2px;letter-spacing:1px}
+.header-right{display:flex;align-items:center;gap:16px}
+.h-badge{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:1px}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+
+/* LAYOUT */
+.app{display:grid;grid-template-columns:400px 1fr;min-height:calc(100vh - 57px)}
+
+/* LEFT */
+.left{border-right:1px solid var(--border);overflow-y:auto;scrollbar-width:thin;scrollbar-color:#1e1e1e transparent}
+.left::-webkit-scrollbar{width:3px}
+.left::-webkit-scrollbar-thumb{background:#1e1e1e;border-radius:2px}
+
+.sec{border-bottom:1px solid var(--border)}
+.sec-head{display:flex;align-items:center;justify-content:space-between;padding:14px 22px}
+.sec-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--muted2);text-transform:uppercase}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)}
+.sec-body{padding:0 22px 22px}
+
+/* API KEY */
+.key-wrap{position:relative}
+.key-input{width:100%;background:var(--s2);border:1px solid var(--border2);border-radius:3px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:12px;padding:11px 72px 11px 13px;outline:none;transition:border-color 0.2s,box-shadow 0.2s;letter-spacing:0.5px}
+.key-input:focus{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-dim)}
+.key-input::placeholder{color:var(--muted);letter-spacing:0}
+.key-toggle{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:var(--s3);border:1px solid var(--border2);color:var(--muted2);border-radius:2px;padding:4px 9px;font-size:9px;font-family:'JetBrains Mono',monospace;letter-spacing:1px;cursor:pointer;transition:all 0.15s;text-transform:uppercase}
+.key-toggle:hover{color:var(--text);border-color:var(--muted2)}
+.key-hint{margin-top:7px;font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace}
+.key-hint a{color:var(--accent);text-decoration:none;opacity:0.7;transition:opacity 0.15s}
+.key-hint a:hover{opacity:1}
+
+/* MODES */
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mode-btn{background:var(--s2);border:1px solid var(--border2);border-radius:3px;padding:11px 13px;cursor:pointer;transition:all 0.15s;position:relative;overflow:hidden}
+.mode-btn::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--accent);transform:scaleX(0);transition:transform 0.2s}
+.mode-btn:hover{border-color:var(--muted2)}
+.mode-btn.active{border-color:rgba(232,255,71,0.35);background:var(--accent-dim)}
+.mode-btn.active::after{transform:scaleX(1)}
+.mode-lbl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--muted2);margin-bottom:3px;text-transform:uppercase}
+.mode-btn.active .mode-lbl{color:var(--accent)}
+.mode-desc{font-size:11px;color:var(--muted2);line-height:1.4}
+.mode-btn.active .mode-desc{color:var(--text)}
+
+/* UPLOADS */
+.uploads{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.upload-zone{background:var(--s2);border:1px dashed rgba(255,255,255,0.1);border-radius:3px;aspect-ratio:3/4;position:relative;cursor:pointer;overflow:hidden;transition:all 0.2s}
+.upload-zone:hover{border-color:var(--muted2);background:var(--s3)}
+.upload-zone.drag{border-color:var(--accent);background:var(--accent-dim);border-style:solid}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;z-index:2}
+.upload-zone .up-preview{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 0.3s;z-index:1}
+.upload-zone.has-file .up-preview{opacity:1}
+.upload-zone.has-file .up-placeholder{opacity:0}
+.up-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;transition:opacity 0.2s;pointer-events:none}
+.up-icon{font-size:22px;opacity:0.35}
+.up-tag{position:absolute;top:8px;left:8px;font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:2px;background:rgba(0,0,0,0.85);color:var(--accent);padding:3px 7px;border-radius:2px;z-index:3;text-transform:uppercase}
+.up-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--muted2);text-transform:uppercase}
+.up-hint{font-size:10px;color:var(--muted);text-align:center;padding:0 10px;line-height:1.4}
+.up-overlay{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.88));padding:18px 8px 8px;z-index:2;opacity:0;transition:opacity 0.2s}
+.upload-zone.has-file .up-overlay{opacity:1}
+.up-fname{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* SCENE PROMPT */
+.scene-prompt-wrap{display:none;margin-top:12px}
+.scene-prompt-wrap.visible{display:block}
+.scene-prompt-wrap textarea{width:100%;background:var(--s2);border:1px solid var(--border2);border-radius:3px;color:var(--text);font-family:'Inter',sans-serif;font-size:12px;padding:11px 13px;outline:none;resize:vertical;min-height:90px;line-height:1.6;transition:border-color 0.2s,box-shadow 0.2s}
+.scene-prompt-wrap textarea:focus{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-dim)}
+.scene-prompt-wrap textarea::placeholder{color:var(--muted)}
+
+/* CONTROLS */
+.controls{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ctrl{background:var(--s2);border:1px solid var(--border);border-radius:3px;padding:10px 12px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all 0.15s;user-select:none}
+.ctrl:hover{border-color:var(--border2)}
+.ctrl.on{border-color:rgba(232,255,71,0.25);background:var(--accent-dim)}
+.ctrl-toggle{width:26px;height:14px;border-radius:7px;background:var(--s3);border:1px solid var(--border2);position:relative;flex-shrink:0;transition:all 0.2s}
+.ctrl-toggle::after{content:'';position:absolute;top:2px;left:2px;width:8px;height:8px;border-radius:50%;background:var(--muted);transition:all 0.2s}
+.ctrl.on .ctrl-toggle{background:var(--accent-dim);border-color:rgba(232,255,71,0.4)}
+.ctrl.on .ctrl-toggle::after{left:14px;background:var(--accent);box-shadow:0 0 5px var(--accent-glow)}
+.ctrl-name{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--muted2);text-transform:uppercase}
+.ctrl.on .ctrl-name{color:var(--accent)}
+
+/* GENERATE */
+.gen-btn{width:100%;background:var(--accent);border:none;border-radius:3px;color:#0a0a0a;font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:5px;padding:15px 24px;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;gap:10px}
+.gen-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.12),transparent);transform:translateX(-100%);transition:transform 0.5s}
+.gen-btn:hover::before{transform:translateX(100%)}
+.gen-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px var(--accent-glow)}
+.gen-btn:active{transform:translateY(0)}
+.gen-btn:disabled{opacity:0.45;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-spinner{width:14px;height:14px;border:2px solid rgba(0,0,0,0.2);border-top-color:#0a0a0a;border-radius:50%;display:none;animation:spin 0.7s linear infinite}
+.gen-btn.loading .btn-spinner{display:block}
+.gen-btn.loading .btn-text{opacity:0.6}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.err-box{display:none;background:rgba(255,77,77,0.07);border:1px solid rgba(255,77,77,0.22);border-radius:3px;padding:11px 13px;font-size:11px;color:#ff8888;font-family:'JetBrains Mono',monospace;line-height:1.5;margin-top:10px}
+.err-box.visible{display:block}
+.field-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--muted2);text-transform:uppercase;margin-bottom:9px}
+
+/* RIGHT */
+.right{overflow-y:auto;scrollbar-width:thin;scrollbar-color:#1a1a1a transparent;background:var(--s1)}
+.right::-webkit-scrollbar{width:3px}
+.right::-webkit-scrollbar-thumb{background:#1a1a1a;border-radius:2px}
+
+.right-head{display:flex;align-items:center;justify-content:space-between;padding:14px 26px;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(17,17,17,0.96);backdrop-filter:blur(20px);z-index:10}
+.right-title{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--muted2);text-transform:uppercase}
+.result-count{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)}
+
+.right-body{padding:22px 26px;display:flex;flex-direction:column;gap:14px}
+
+/* EMPTY */
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:55vh;gap:14px;text-align:center;padding:40px}
+.empty-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:3px;margin-bottom:6px}
+.empty-cell{width:20px;height:20px;border:1px solid var(--border);border-radius:2px;opacity:0;animation:fadeUp 0.4s forwards}
+.empty-cell:nth-child(odd){background:var(--s2)}
+@keyframes fadeUp{to{opacity:1}}
+.empty-t{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:6px;color:#2a2a2a}
+.empty-s{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:1px}
+
+/* STATUS */
+.status-card{display:none;background:var(--s2);border:1px solid var(--border2);border-radius:5px;padding:22px}
+.status-card.visible{display:block}
+.status-t{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--muted2);text-transform:uppercase;margin-bottom:18px}
+.prog-bar{height:2px;background:var(--s3);border-radius:1px;overflow:hidden;margin-bottom:18px}
+.prog-fill{height:100%;background:var(--accent);border-radius:1px;width:0%;transition:width 0.4s ease;box-shadow:0 0 8px var(--accent-glow)}
+.steps{display:flex;flex-direction:column;gap:9px}
+.step-item{display:flex;align-items:center;gap:11px;opacity:0.25;transition:all 0.3s}
+.step-item.active{opacity:1}
+.step-item.done{opacity:0.55}
+.step-dot{width:5px;height:5px;border-radius:50%;background:var(--muted);flex-shrink:0;transition:all 0.3s}
+.step-item.active .step-dot{background:var(--accent);box-shadow:0 0 7px var(--accent-glow);animation:pulse 1s infinite}
+.step-item.done .step-dot{background:var(--green)}
+.step-text{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:0.3px}
+.step-item.active .step-text{color:var(--text)}
+
+/* RESULT CARDS */
+.rcard{background:var(--s2);border:1px solid var(--border);border-radius:5px;overflow:hidden;transition:border-color 0.2s}
+.rcard:hover{border-color:var(--border2)}
+.rcard-head{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-bottom:1px solid var(--border);background:var(--s3)}
+.rcard-lbl{display:flex;align-items:center;gap:8px}
+.rtag{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;padding:2px 7px;border-radius:2px}
+.tag-s{background:rgba(71,180,255,0.08);color:var(--blue);border:1px solid rgba(71,180,255,0.18)}
+.tag-c{background:rgba(71,255,178,0.08);color:var(--green);border:1px solid rgba(71,255,178,0.18)}
+.tag-p{background:var(--accent-dim);color:var(--accent);border:1px solid rgba(232,255,71,0.18)}
+.tag-n{background:rgba(255,77,77,0.07);color:#ff8080;border:1px solid rgba(255,77,77,0.18)}
+.tag-f{background:rgba(255,200,100,0.07);color:#ffc864;border:1px solid rgba(255,200,100,0.18)}
+.tag-j{background:rgba(255,255,255,0.03);color:var(--muted2);border:1px solid var(--border2)}
+.rcard-title{font-size:11px;color:var(--muted2);font-weight:500}
+.copy-btn{background:var(--s2);border:1px solid var(--border2);color:var(--muted2);border-radius:2px;padding:4px 10px;font-size:9px;font-family:'JetBrains Mono',monospace;letter-spacing:1px;cursor:pointer;transition:all 0.15s;text-transform:uppercase}
+.copy-btn:hover{color:var(--text);border-color:var(--muted2)}
+.copy-btn.copied{color:var(--green);border-color:rgba(71,255,178,0.3)}
+.rcard-body{padding:16px}
+
+/* ANALYSIS TABS */
+.a-tabs{display:flex;gap:1px;margin-bottom:14px;background:var(--s3);border-radius:3px;padding:2px}
+.a-tab{flex:1;background:transparent;border:none;color:var(--muted2);font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;padding:6px;border-radius:2px;cursor:pointer;transition:all 0.15s}
+.a-tab.active{background:var(--s2);color:var(--text)}
+.a-content{display:none}
+.a-content.active{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.a-item{background:var(--s3);border-radius:3px;padding:8px 10px}
+.a-key{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:3px}
+.a-val{font-size:11px;color:var(--text);line-height:1.4}
+
+/* PROMPTS */
+.prompt-txt{font-family:'Inter',sans-serif;font-size:13px;color:var(--text);line-height:1.75;white-space:pre-wrap}
+.prompt-txt.neg{color:#ff9999}
+.json-txt{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted2);line-height:1.7;white-space:pre-wrap;max-height:280px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#1e1e1e transparent}
+
+@media(max-width:880px){
+  .app{grid-template-columns:1fr}
+  .left{border-right:none;border-bottom:1px solid var(--border)}
+  .right{min-height:50vh}
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo">
+    <div class="logo-box">FC</div>
+    <div class="logo-name">FrameClone</div>
+    <div class="logo-ver">PRO v2</div>
+  </div>
+  <div class="header-right">
+    <div class="h-badge">DALL·E 3 · GEMINI 2.5</div>
+    <div class="dot"></div>
+  </div>
+</header>
+
+<div class="app">
+
+  <!-- LEFT PANEL -->
+  <div class="left">
+
+    <!-- 01 API -->
+    <div class="sec">
+      <div class="sec-head">
+        <div class="sec-lbl">API Bağlantısı</div>
+        <div class="sec-num">01</div>
+      </div>
+      <div class="sec-body">
+        <div class="key-wrap">
+          <input type="password" id="apiKeyInput" class="key-input" placeholder="AIzaSy...">
+          <button class="key-toggle" id="apiKeyToggle" onclick="toggleApiKeyVisibility()">GÖSTER</button>
+        </div>
+        <div class="key-hint">→ <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com/apikey</a></div>
+      </div>
+    </div>
+
+    <!-- 02 MOD -->
+    <div class="sec">
+      <div class="sec-head">
+        <div class="sec-lbl">Çalışma Modu</div>
+        <div class="sec-num">02</div>
+      </div>
+      <div class="sec-body">
+        <div class="modes">
+          <div class="mode-btn active" id="modeA" onclick="setMode('image')">
+            <div class="mode-lbl">MOD — A</div>
+            <div class="mode-desc">Sahne görseli + Karakter görseli</div>
+          </div>
+          <div class="mode-btn" id="modeB" onclick="setMode('prompt')">
+            <div class="mode-lbl">MOD — B</div>
+            <div class="mode-desc">Yazılı sahne promptu + Karakter</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 03 GÖRSELLER -->
+    <div class="sec">
+      <div class="sec-head">
+        <div class="sec-lbl">Referans Görseller</div>
+        <div class="sec-num">03</div>
+      </div>
+      <div class="sec-body">
+        <div class="uploads" id="uploadArea">
+          <div class="upload-zone" id="sceneZone">
+            <div class="up-tag">SCENE</div>
+            <img class="up-preview" id="scenePreview" alt="">
+            <div class="up-overlay"><div class="up-fname" id="sceneName"></div></div>
+            <div class="up-placeholder">
+              <div class="up-icon">🎬</div>
+              <div class="up-label">Sahne</div>
+              <div class="up-hint">Kamera açısı, ışık, arka plan</div>
+            </div>
+            <input type="file" accept="image/*" id="sceneInput">
+          </div>
+          <div class="upload-zone" id="charZone">
+            <div class="up-tag">CHAR</div>
+            <img class="up-preview" id="charPreview" alt="">
+            <div class="up-overlay"><div class="up-fname" id="charName"></div></div>
+            <div class="up-placeholder">
+              <div class="up-icon">🧑</div>
+              <div class="up-label">Karakter</div>
+              <div class="up-hint">Yüz, ten, saç, göz</div>
+            </div>
+            <input type="file" accept="image/*" id="charInput">
+          </div>
+        </div>
+        <div class="scene-prompt-wrap" id="scenePromptWrap">
+          <div class="field-lbl" style="margin-top:14px">Sahne Promptu</div>
+          <textarea id="scenePromptText" placeholder="Örn: Cinematic portrait, dim subway station, cold fluorescent lights, shallow DOF..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- 04 KİLİTLER -->
+    <div class="sec">
+      <div class="sec-head">
+        <div class="sec-lbl">Kilit Ayarları</div>
+        <div class="sec-num">04</div>
+      </div>
+      <div class="sec-body">
+        <div class="controls">
+          <div class="ctrl" id="ctrlPose" onclick="toggleCtrl(this)">
+            <div class="ctrl-toggle"></div>
+            <div class="ctrl-name">Pose Lock</div>
+          </div>
+          <div class="ctrl" id="ctrlOutfit" onclick="toggleCtrl(this)">
+            <div class="ctrl-toggle"></div>
+            <div class="ctrl-name">Outfit Lock</div>
+          </div>
+          <div class="ctrl" id="ctrlFlash" onclick="toggleCtrl(this)">
+            <div class="ctrl-toggle"></div>
+            <div class="ctrl-name">iPhone Flash</div>
+          </div>
+          <div class="ctrl on" id="ctrlStrict" onclick="toggleCtrl(this)">
+            <div class="ctrl-toggle"></div>
+            <div class="ctrl-name">Strict Lock</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 05 ÇALIŞTIR -->
+    <div class="sec" style="border-bottom:none">
+      <div class="sec-body" style="padding-top:18px">
+        <button class="gen-btn" id="generateBtn" onclick="runAnalysis()">
+          <div class="btn-spinner"></div>
+          <span class="btn-text">ANALİZ ET &amp; PROMPT ÜRET</span>
+        </button>
+        <div class="err-box" id="errorBox"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right">
+    <div class="right-head">
+      <div class="right-title">Analiz Çıktısı</div>
+      <div class="result-count" id="resultCount">bekliyor</div>
+    </div>
+    <div class="right-body">
+
+      <!-- EMPTY -->
+      <div id="emptyCard" class="empty">
+        <div class="empty-grid">
+          <div class="empty-cell" style="animation-delay:.00s"></div>
+          <div class="empty-cell" style="animation-delay:.05s"></div>
+          <div class="empty-cell" style="animation-delay:.10s"></div>
+          <div class="empty-cell" style="animation-delay:.15s"></div>
+          <div class="empty-cell" style="animation-delay:.20s"></div>
+          <div class="empty-cell" style="animation-delay:.25s"></div>
+          <div class="empty-cell" style="animation-delay:.30s"></div>
+          <div class="empty-cell" style="animation-delay:.35s"></div>
+          <div class="empty-cell" style="animation-delay:.40s"></div>
+          <div class="empty-cell" style="animation-delay:.45s"></div>
+          <div class="empty-cell" style="animation-delay:.50s"></div>
+          <div class="empty-cell" style="animation-delay:.55s"></div>
+          <div class="empty-cell" style="animation-delay:.60s"></div>
+          <div class="empty-cell" style="animation-delay:.65s"></div>
+          <div class="empty-cell" style="animation-delay:.70s"></div>
+          <div class="empty-cell" style="animation-delay:.75s"></div>
+        </div>
+        <div class="empty-t">HAZIR</div>
+        <div class="empty-s">→ görselleri yükle · analizi başlat</div>
+      </div>
+
+      <!-- STATUS -->
+      <div class="status-card" id="statusCard">
+        <div class="status-t">İşleniyor</div>
+        <div class="prog-bar"><div class="prog-fill" id="progressFill"></div></div>
+        <div class="steps">
+          <div class="step-item"><div class="step-dot"></div><div class="step-text">Görseller hazırlanıyor</div></div>
+          <div class="step-item"><div class="step-dot"></div><div class="step-text">Gemini 2.5'e gönderiliyor</div></div>
+          <div class="step-item"><div class="step-dot"></div><div class="step-text">Sahne analiz ediliyor</div></div>
+          <div class="step-item"><div class="step-dot"></div><div class="step-text">Prompt oluşturuluyor</div></div>
+          <div class="step-item"><div class="step-dot"></div><div class="step-text">Sonuçlar işleniyor</div></div>
+        </div>
+      </div>
+
+      <!-- ANALYSIS -->
+      <div class="rcard" id="analysisCard" style="display:none">
+        <div class="rcard-head">
+          <div class="rcard-lbl">
+            <span class="rtag tag-s">SCENE</span>
+            <span class="rtag tag-c">CHAR</span>
+            <span class="rcard-title">Sahne &amp; Karakter Analizi</span>
+          </div>
+        </div>
+        <div class="rcard-body">
+          <div class="a-tabs">
+            <button class="a-tab active" onclick="switchTab(this,'sceneTab')">Sahne Verileri</button>
+            <button class="a-tab" onclick="switchTab(this,'charTab')">Karakter Verileri</button>
+          </div>
+          <div class="a-content active" id="sceneTab"><div id="sceneSummaryList"></div></div>
+          <div class="a-content" id="charTab"><div id="charSummaryList"></div></div>
+        </div>
+      </div>
+
+      <!-- POSITIVE -->
+      <div class="rcard" id="promptCard" style="display:none">
+        <div class="rcard-head">
+          <div class="rcard-lbl">
+            <span class="rtag tag-p">POSITIVE</span>
+            <span class="rcard-title">DALL·E 3 Promptu</span>
+          </div>
+          <button class="copy-btn" onclick="copyEl('positivePromptText',this)">KOPYALA</button>
+        </div>
+        <div class="rcard-body">
+          <div class="prompt-txt" id="positivePromptText"></div>
+        </div>
+      </div>
+
+      <!-- NEGATIVE -->
+      <div class="rcard" id="negativeCard" style="display:none">
+        <div class="rcard-head">
+          <div class="rcard-lbl">
+            <span class="rtag tag-n">NEGATIVE</span>
+            <span class="rcard-title">Negatif Prompt</span>
+          </div>
+          <button class="copy-btn" onclick="copyEl('negativePromptText',this)">KOPYALA</button>
+        </div>
+        <div class="rcard-body">
+          <div class="prompt-txt neg" id="negativePromptText"></div>
+        </div>
+      </div>
+
+      <!-- IPHONE -->
+      <div class="rcard" id="iphoneCard" style="display:none">
+        <div class="rcard-head">
+          <div class="rcard-lbl">
+            <span class="rtag tag-f">iPHONE</span>
+            <span class="rcard-title">Flash Varyant</span>
+          </div>
+          <button class="copy-btn" onclick="copyEl('iphoneVariantText',this)">KOPYALA</button>
+        </div>
+        <div class="rcard-body">
+          <div class="prompt-txt" id="iphoneVariantText"></div>
+        </div>
+      </div>
+
+      <!-- JSON -->
+      <div class="rcard" id="jsonCard" style="display:none">
+        <div class="rcard-head">
+          <div class="rcard-lbl">
+            <span class="rtag tag-j">JSON</span>
+            <span class="rcard-title">Ham Veri</span>
+          </div>
+          <button class="copy-btn" onclick="copyEl('rawJsonText',this)">KOPYALA</button>
+        </div>
+        <div class="rcard-body">
+          <div class="json-txt" id="rawJsonText"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+const state = { mode:'image', sceneFile:null, charFile:null, sceneB64:null, charB64:null };
+
+function setupDrop(zone, input, type) {
+  ['dragenter','dragover'].forEach(e => zone.addEventListener(e, ev => { ev.preventDefault(); zone.classList.add('drag'); }));
+  ['dragleave','drop'].forEach(e => zone.addEventListener(e, ev => {
+    ev.preventDefault();
+    if (e==='dragleave' && zone.contains(ev.relatedTarget)) return;
+    zone.classList.remove('drag');
+  }));
+  zone.addEventListener('drop', ev => { const f=ev.dataTransfer.files?.[0]; if(f) loadFile(f,type); });
+  input.addEventListener('change', ev => { const f=ev.target.files?.[0]; if(f) loadFile(f,type); });
+  zone.addEventListener('click', ev => { if(ev.target!==input) input.click(); });
+}
+
+function loadFile(file, type) {
+  if (!file.type.startsWith('image/')) { showErr('Geçerli bir görsel dosyası yükle.'); return; }
+  const reader = new FileReader();
+  reader.onload = e => {
+    const b64=e.target.result.split(',')[1], url=e.target.result;
+    if (type==='scene') {
+      state.sceneFile=file; state.sceneB64=b64;
+      document.getElementById('scenePreview').src=url;
+      document.getElementById('sceneZone').classList.add('has-file');
+      document.getElementById('sceneName').textContent=file.name;
+    } else {
+      state.charFile=file; state.charB64=b64;
+      document.getElementById('charPreview').src=url;
+      document.getElementById('charZone').classList.add('has-file');
+      document.getElementById('charName').textContent=file.name;
+    }
+    clearErr();
+  };
+  reader.readAsDataURL(file);
+}
+
+setupDrop(document.getElementById('sceneZone'), document.getElementById('sceneInput'), 'scene');
+setupDrop(document.getElementById('charZone'), document.getElementById('charInput'), 'char');
+
+function toggleApiKeyVisibility() {
+  const inp=document.getElementById('apiKeyInput'), btn=document.getElementById('apiKeyToggle');
+  if (inp.type==='password') { inp.type='text'; btn.textContent='GİZLE'; }
+  else { inp.type='password'; btn.textContent='GÖSTER'; }
+}
+
+function setMode(m) {
+  state.mode=m;
+  document.getElementById('modeA').classList.toggle('active', m==='image');
+  document.getElementById('modeB').classList.toggle('active', m==='prompt');
+  document.getElementById('uploadArea').style.display=m==='image'?'':'grid';
+  document.getElementById('sceneZone').style.display=m==='image'?'':'none';
+  document.getElementById('scenePromptWrap').classList.toggle('visible', m==='prompt');
+}
+
+function toggleCtrl(el) { el.classList.toggle('on'); }
+function isOn(id) { return document.getElementById(id).classList.contains('on'); }
+
+function switchTab(btn, tabId) {
+  btn.closest('.rcard-body').querySelectorAll('.a-tab').forEach(b=>b.classList.remove('active'));
+  btn.closest('.rcard-body').querySelectorAll('.a-content').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(tabId).classList.add('active');
+}
+
+function showErr(msg) {
+  const b=document.getElementById('errorBox');
+  b.textContent=msg; b.classList.add('visible');
+}
+function clearErr() { document.getElementById('errorBox').classList.remove('visible'); }
+
+async function copyEl(elId, btn) {
+  const text=document.getElementById(elId).textContent;
+  try {
+    await navigator.clipboard.writeText(text);
+    btn.textContent='✓ KOPYALANDI'; btn.classList.add('copied');
+    setTimeout(()=>{ btn.textContent='KOPYALA'; btn.classList.remove('copied'); }, 1600);
+  } catch(e) { btn.textContent='HATA'; }
+}
+
+async function setStep(n) {
+  const steps=document.querySelectorAll('.step-item');
+  steps.forEach((s,i)=>{
+    s.classList.remove('active','done');
+    if(i<n-1) s.classList.add('done');
+    if(i===n-1) s.classList.add('active');
+  });
+  document.getElementById('progressFill').style.width=(n/steps.length*100)+'%';
+  await new Promise(r=>setTimeout(r,400));
+}
+
+function buildSystemPrompt(config) {
+  return `You are FrameClone Pro. Analyze the images and return ONLY a JSON object — no text, no markdown, no explanation.
+
+TASK: Reconstruct the scene exactly but replace the person with the character reference.
+
+CRITICAL RULES:
+1. POSE: Copy exact body position from scene (back to camera = new char also back to camera, arms raised = new char arms raised, etc.)
+2. SCENE: Lock camera angle, distance, lighting, background, color grade — do not change anything.
+3. CHARACTER: Use face/skin/hair/eyes from character reference only.
+4. FORMAT: Always 9:16 portrait vertical.
+${config.poseLock?'5. POSE LOCK ON: Replicate exact stance and limb positions.':''}
+${config.outfitLock?'5. OUTFIT LOCK ON: Keep outfit style from scene.':''}
+${config.strict?'5. STRICT LOCK: Use phrases "identical composition", "same camera angle", "same background", "only the person is replaced".':''}
+${config.phoneFlash?'5. Generate iphone_flash_variant: same scene + iPhone direct flash aesthetic.':''}
+${config.mode==='prompt'?`SCENE BLUEPRINT: ${config.scenePrompt}`:''}
+
+Return this exact JSON structure with all fields filled:
+{"scene":{"camera_angle":"","camera_distance":"","lens_feel":"","depth_of_field":"","lighting_type":"","lighting_direction":"","mood":"","background":"","color_grade":"","subject_facing":"","body_pose":"","head_direction":""},"character":{"gender_age":"","ethnicity":"","skin_tone":"","eye_color":"","hair_color_style":"","distinctive_features":"","expression":""},"positive_prompt":"","negative_prompt":"","iphone_flash_variant":${config.phoneFlash?'""':'null'}}`;
+}
+
+async function runAnalysis() {
+  clearErr();
+  const apiKey=document.getElementById('apiKeyInput').value.trim();
+  if (!apiKey) { showErr('Lütfen Gemini API key gir.'); return; }
+  if (!state.charB64) { showErr('Karakter görseli gerekli.'); return; }
+  if (state.mode==='image' && !state.sceneB64) { showErr('Mod A seçiliyken sahne görseli gerekli.'); return; }
+  if (state.mode==='prompt' && !document.getElementById('scenePromptText').value.trim()) {
+    showErr('Mod B seçiliyken sahne promptu gerekli.'); return;
+  }
+
+  const config = {
+    mode:state.mode,
+    scenePrompt:document.getElementById('scenePromptText').value.trim(),
+    poseLock:isOn('ctrlPose'), outfitLock:isOn('ctrlOutfit'),
+    phoneFlash:isOn('ctrlFlash'), strict:isOn('ctrlStrict')
+  };
+
+  const btn=document.getElementById('generateBtn');
+  btn.disabled=true; btn.classList.add('loading');
+  document.getElementById('statusCard').classList.add('visible');
+  document.getElementById('emptyCard').style.display='none';
+  ['analysisCard','promptCard','negativeCard','iphoneCard','jsonCard'].forEach(id=>document.getElementById(id).style.display='none');
+  document.getElementById('resultCount').textContent='işleniyor...';
+
+  try {
+    await setStep(1);
+    const parts=[];
+    if (state.mode==='image' && state.sceneB64) {
+      parts.push({text:'Image 1 — SCENE REFERENCE: Analyze every technical visual element of this image carefully.'});
+      parts.push({inline_data:{mime_type:state.sceneFile.type,data:state.sceneB64}});
+    }
+    parts.push({text:state.mode==='image'
+      ?'Image 2 — CHARACTER REFERENCE: Extract identity features only from this image.'
+      :'CHARACTER REFERENCE: Extract identity features only from this image. Scene is defined by the written blueprint.'
+    });
+    parts.push({inline_data:{mime_type:state.charFile.type,data:state.charB64}});
+    parts.push({text:buildSystemPrompt(config)});
+
+    await setStep(2);
+    const response=await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+      {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          contents:[{role:'user',parts}],
+          generationConfig:{temperature:0.2,maxOutputTokens:8192,responseMimeType:'application/json'}
+        })
+      }
+    );
+
+    await setStep(3);
+    if (!response.ok) {
+      const err=await response.json().catch(()=>({}));
+      const msg=err?.error?.message||`API hatası: ${response.status}`;
+      if (response.status===400) throw new Error(`API Key geçersiz: ${msg}`);
+      if (response.status===403) throw new Error('API Key yetkisi yok.');
+      throw new Error(msg);
+    }
+
+    const data=await response.json();
+    await setStep(4);
+
+    let rawText='';
+    try { rawText=data.candidates[0].content.parts[0].text; }
+    catch(e) { throw new Error('Gemini yanıtı beklenmedik formatta: '+JSON.stringify(data).substring(0,200)); }
+
+    if (!rawText||rawText.trim()==='') throw new Error('Gemini boş yanıt döndürdü. Tekrar dene.');
+
+    let parsed;
+    try { parsed=JSON.parse(rawText.trim()); }
+    catch(e1) {
+      try {
+        const clean=rawText.replace(/```json\s*/gi,'').replace(/```\s*/g,'').trim();
+        const s=clean.indexOf('{'), e=clean.lastIndexOf('}');
+        if(s!==-1&&e!==-1) parsed=JSON.parse(clean.slice(s,e+1));
+        else throw new Error('no braces');
+      } catch(e2) {
+        try {
+          let t=rawText.replace(/```json\s*/gi,'').replace(/```\s*/g,'').trim();
+          const s=t.indexOf('{');
+          if(s!==-1){
+            t=t.slice(s);
+            let o=0; for(const ch of t){if(ch==='{')o++;else if(ch==='}')o--;}
+            if(o>0) t+='}'.repeat(o);
+            parsed=JSON.parse(t);
+          } else throw new Error('no json');
+        } catch(e3) {
+          throw new Error('JSON parse hatası. Tekrar dene.\n'+rawText.substring(0,150));
+        }
+      }
+    }
+
+    await setStep(5);
+    await new Promise(r=>setTimeout(r,300));
+    renderResults(parsed, config, rawText);
+
+  } catch(err) {
+    showErr(err.message||String(err));
+    document.getElementById('emptyCard').style.display='';
+    document.getElementById('resultCount').textContent='hata';
+  } finally {
+    btn.disabled=false; btn.classList.remove('loading');
+    document.getElementById('statusCard').classList.remove('visible');
+  }
+}
+
+function renderResults(data, config, rawText) {
+  const sl=document.getElementById('sceneSummaryList');
+  sl.innerHTML='';
+  if (data.scene) Object.entries(data.scene).forEach(([k,v])=>{
+    if(!v) return;
+    sl.innerHTML+=`<div class="a-item"><div class="a-key">${k.replace(/_/g,' ')}</div><div class="a-val">${v}</div></div>`;
+  });
+
+  const cl=document.getElementById('charSummaryList');
+  cl.innerHTML='';
+  if (data.character) Object.entries(data.character).forEach(([k,v])=>{
+    if(!v) return;
+    cl.innerHTML+=`<div class="a-item"><div class="a-key">${k.replace(/_/g,' ')}</div><div class="a-val">${v}</div></div>`;
+  });
+
+  document.getElementById('positivePromptText').textContent=data.positive_prompt||'—';
+  document.getElementById('negativePromptText').textContent=data.negative_prompt||'—';
+
+  if (data.iphone_flash_variant) {
+    document.getElementById('iphoneVariantText').textContent=data.iphone_flash_variant;
+    document.getElementById('iphoneCard').style.display='';
+  } else {
+    document.getElementById('iphoneCard').style.display='none';
+  }
+
+  document.getElementById('rawJsonText').textContent=JSON.stringify(data,null,2);
+  ['analysisCard','promptCard','negativeCard','jsonCard'].forEach(id=>document.getElementById(id).style.display='');
+  document.getElementById('resultCount').textContent='4 çıktı hazır';
+}
+</script>
+</body>
+</html>
